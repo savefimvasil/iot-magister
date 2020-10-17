@@ -1,5 +1,5 @@
 <template>
-  <div class="right-bar">
+  <div class="right-bar" style="background: red">
     <div class="right-bar__header">
       <div class="right-bar__title">
         <div v-if="activeRoom.icon" class="right-bar__icon" :class="[`right-bar__icon--${activeRoom.color}`]">
