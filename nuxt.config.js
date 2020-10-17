@@ -24,6 +24,26 @@ module.exports = {
         })
       }
 
+      // SVG Loader
+      const svgRule = config.module.rules.find(rule => rule.test.test('.svg'))
+
+      svgRule.test = /\.(png|jpe?g|gif|webp)$/
+
+      config.module.rules.push({
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'babel-loader'
+          },
+          {
+            loader: 'vue-svg-loader',
+            options: {
+              svgo: false
+            }
+          }
+        ]
+      })
+
       config.module.rules.forEach((rule) => {
         if (/scss/.test(rule.test.toString())) {
           rule.oneOf.forEach((key) => {
