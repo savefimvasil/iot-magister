@@ -49,7 +49,7 @@
           temperature: Math.random(),
           date: this.firebase.firestore.FieldValue.serverTimestamp()
         })
-      }, 500000)
+      }, 5000)
 
       const _self = this
       this.firebase.firestore().collection('room-conditions').orderBy('date', 'desc').limit(1).onSnapshot(function (docs) {

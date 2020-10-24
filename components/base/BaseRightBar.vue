@@ -56,17 +56,6 @@
     data () {
       return {
         cards: [
-          { icon: 'light', enabled: false, name: 'light', status: '100%' },
-          { icon: 'light', enabled: true, name: 'light', status: '100%' },
-          { icon: 'light', enabled: true, name: 'light', status: '100%' },
-          { icon: 'light', enabled: true, name: 'light', status: '100%' },
-          { icon: 'light', enabled: true, name: 'light', status: '100%' },
-          { icon: 'light', enabled: false, name: 'light', status: '100%' },
-          { icon: 'light', enabled: false, name: 'light', status: '100%' },
-          { icon: 'light', enabled: false, name: 'light', status: '100%' },
-          { icon: 'light', enabled: false, name: 'light', status: '100%' },
-          { icon: 'light', enabled: false, name: 'light', status: '100%' },
-          { icon: 'light', enabled: false, name: 'light', status: '100%' },
           { icon: 'light', enabled: false, name: 'light', status: '100%' }
         ]
       }
