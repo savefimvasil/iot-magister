@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const firebase = require('firebase')
-const config = require('./config.js')
+const config = require('../config/firebase.js')
 const router = require('./post.route')
 const bodyParser = require('body-parser')
 
