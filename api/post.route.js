@@ -1,10 +1,9 @@
 const express = require('express')
 const path = require('path')
 
-const config = require('./config')
+// const config = require('./config')
 
-const firebase = require('firebase')
-console.log(firebase, config)
+// const firebase = require('firebase')
 
 const router = express.Router()
 

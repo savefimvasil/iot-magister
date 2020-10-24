@@ -17,45 +17,6 @@
             icon: 'bedroom',
             temperature: {
               label: 'temperature',
-              value: '27'
-            },
-            humidity: {
-              label: 'humidity',
-              value: '13'
-            }
-          },
-          {
-            title: 'Main Bedroom',
-            image: 'bedroom.webp',
-            icon: 'bedroom',
-            temperature: {
-              label: 'temperature',
-              value: '28'
-            },
-            humidity: {
-              label: 'humidity',
-              value: '14'
-            }
-          },
-          {
-            title: 'Main Bedroom',
-            image: 'bedroom.webp',
-            icon: 'bedroom',
-            temperature: {
-              label: 'temperature',
-              value: '28'
-            },
-            humidity: {
-              label: 'humidity',
-              value: '15'
-            }
-          },
-          {
-            title: 'Main Bedroom',
-            image: 'bedroom.webp',
-            icon: 'bedroom',
-            temperature: {
-              label: 'temperature',
               value: '29'
             },
             humidity: {
@@ -81,11 +42,22 @@
     },
 
     mounted () {
-      this.firebase.database().ref('room-conditions').push({
-        humidity: 51,
-        motion: false,
-        temperature: 27.2,
-        date: Date.now()
+      setInterval(() => {
+        this.firebase.firestore().collection('room-conditions').add({
+          humidity: 51,
+          motion: false,
+          temperature: Math.random(),
+          date: this.firebase.firestore.FieldValue.serverTimestamp()
+        })
+      }, 500000)
+
+      const _self = this
+      this.firebase.firestore().collection('room-conditions').orderBy('date', 'desc').limit(1).onSnapshot(function (docs) {
+        docs.forEach(doc => {
+          if (doc.data().temperature) {
+            _self.menu[0].temperature.value = doc.data().temperature.toFixed(2)
+          }
+        })
       })
     },
     methods: {
