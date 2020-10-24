@@ -6,6 +6,8 @@
 </template>
 
 <script>
+  import axios from 'axios'
+
   export default {
     data () {
       return {
@@ -41,7 +43,7 @@
       }
     },
 
-    mounted () {
+    async mounted () {
       setInterval(() => {
         this.firebase.firestore().collection('room-conditions').add({
           humidity: 51,
@@ -49,7 +51,7 @@
           temperature: Math.random(),
           date: this.firebase.firestore.FieldValue.serverTimestamp()
         })
-      }, 5000)
+      }, 500000)
 
       const _self = this
       this.firebase.firestore().collection('room-conditions').orderBy('date', 'desc').limit(1).onSnapshot(function (docs) {
@@ -63,6 +65,15 @@
     methods: {
       setInfo (index) {
         this.activeRoom = index
+      },
+
+      async changeSettings () {
+        const url = window.location.href.includes('localhost') ? 'http://localhost:3002/settings' : '/settings'
+        try {
+          await axios.post(url, { timeout: 1 })
+        } catch (e) {
+          console.log(e)
+        }
       }
     }
   }

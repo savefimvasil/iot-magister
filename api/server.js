@@ -2,8 +2,6 @@ const express = require('express')
 const cors = require('cors')
 const router = require('./post.route')
 const bodyParser = require('body-parser')
-// const http = require('http')
-// const server = http.createServer()
 
 const app = express()
 const PORT = process.env.PORT || 3002
