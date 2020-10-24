@@ -79,6 +79,15 @@
         return menu
       }
     },
+
+    mounted () {
+      this.firebase.database().ref('room-conditions').push({
+        humidity: 51,
+        motion: false,
+        temperature: 27.2,
+        date: Date.now()
+      })
+    },
     methods: {
       setInfo (index) {
         this.activeRoom = index
