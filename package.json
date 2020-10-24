@@ -21,6 +21,7 @@
     "firebase": "^7.24.0",
     "lodash": "^4.17.20",
     "nuxt": "^2.14.7",
+    "v-mask": "^2.2.3",
     "vue-svg-loader": "^0.16.0",
     "vue-the-mask": "^0.11.1"
   },

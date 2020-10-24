@@ -7,6 +7,7 @@
 
 <script>
   import axios from 'axios'
+  import { mapGetters } from 'vuex'
 
   export default {
     data () {
@@ -26,10 +27,13 @@
               value: '16'
             }
           }
-        ]
+        ],
+        interval: null,
+        humidity: 1
       }
     },
     computed: {
+      ...mapGetters({ getSettings: 'settings/getSettings' }),
       coloredMenu () {
         const menu = [...this.menu]
         let index = 0
@@ -42,29 +46,39 @@
         return menu
       }
     },
-
     async mounted () {
-      setInterval(() => {
-        this.firebase.firestore().collection('room-conditions').add({
-          humidity: 51,
-          motion: false,
-          temperature: Math.random(),
-          date: this.firebase.firestore.FieldValue.serverTimestamp()
-        })
-      }, 500000)
+      if (this.getSettings.hasOwnProperty('timeout') && this.getSettings.timeout) {
+        this.interval = setInterval(this.intervalMethod, this.getSettings.timeout)
+      }
 
       const _self = this
-      this.firebase.firestore().collection('room-conditions').orderBy('date', 'desc').limit(1).onSnapshot(function (docs) {
-        docs.forEach(doc => {
-          if (doc.data().temperature) {
-            _self.menu[0].temperature.value = doc.data().temperature.toFixed(2)
-          }
+      this.firebase.database().ref('room-conditions').orderByKey().limitToLast(1).on('value', function (snapshot) {
+        snapshot.forEach(item => {
+          _self.menu[0].temperature.value = item.val().temperature.toFixed(2)
         })
       })
+    },
+    beforeDestroy () {
+      clearInterval(this.interval)
     },
     methods: {
       setInfo (index) {
         this.activeRoom = index
+      },
+
+      intervalMethod () {
+        this.firebase.database().ref('room-conditions').push({
+          humidity: this.humidity++,
+          motion: false,
+          temperature: Math.random(),
+          date: this.firebase.firestore.FieldValue.serverTimestamp()
+        })
+        // this.firebase.firestore().collection('room-conditions').add({
+        //   humidity: 51,
+        //   motion: false,
+        //   temperature: Math.random(),
+        //   date: this.firebase.firestore.FieldValue.serverTimestamp()
+        // })
       },
 
       async changeSettings () {

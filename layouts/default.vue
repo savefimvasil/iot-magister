@@ -1,9 +1,38 @@
 <template>
   <div class="app">
-    <header>Smart Home</header>
+    <header>
+      <div class="container">
+        <div>
+          <button v-if="$route.path === '/'" @click="$router.push('/settings')">
+            Settings
+          </button>
+          <button v-else @click="$router.push('/')">
+            Home
+          </button>
+        </div>
+        <h1>Smart Home</h1>
+      </div>
+    </header>
     <nuxt />
   </div>
 </template>
+
+
+<script>
+  import { mapActions } from 'vuex'
+  export default {
+    async created () {
+      try {
+        await this.GET_SETTINGS()
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    methods: {
+      ...mapActions({ GET_SETTINGS: 'settings/GET_SETTINGS' })
+    }
+  }
+</script>
 
 <style lang="scss">
   header {
@@ -18,6 +47,19 @@
     color: $c-white;
     text-transform: uppercase;
     font-size: 20px;
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      button {
+        color: $c-white;
+        font-size: 18px;
+        outline: none;
+        cursor: pointer;
+      }
+    }
   }
 
   .app {
