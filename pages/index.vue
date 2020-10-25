@@ -29,7 +29,8 @@
           }
         ],
         interval: null,
-        humidity: 1
+        humidity: 1,
+        ref: null
       }
     },
     computed: {
@@ -58,26 +59,29 @@
       }
     },
     async mounted () {
+      console.log(this.interval)
       const timeout = this.getSettings.timeout > 99 * 1000 ? this.getSettings.timeout / 1000 : this.getSettings.timeout
       if (this.getSettings.hasOwnProperty('timeout') && this.getSettings.timeout) {
         this.interval = setInterval(this.intervalMethod, timeout)
       }
 
-      this.firebase.database().ref('room-conditions').orderByKey().limitToLast(1).on('value', snapshot => {
+      this.ref = this.firebase.database().ref('room-conditions').orderByKey().limitToLast(1)
+      this.ref.on('value', this.firebaseCallback)
+    },
+    beforeDestroy () {
+      clearInterval(this.interval)
+      this.ref.off('value', this.firebaseCallback)
+    },
+    methods: {
+      ...mapActions({ setGraphInfo: 'temperature/setGraphInfo', clearGraphInfo: 'temperature/clearGraphInfo' }),
+      firebaseCallback (snapshot) {
         snapshot.forEach(item => {
           this.menu[0].temperature.value = item.val().temperature.toFixed(1)
           this.menu[0].humidity.value = item.val().humidity.toFixed(1)
 
           this.setGraphInfo(item.val())
         })
-      })
-    },
-    beforeDestroy () {
-      clearInterval(this.interval)
-      this.clearGraphInfo()
-    },
-    methods: {
-      ...mapActions({ setGraphInfo: 'temperature/setGraphInfo', clearGraphInfo: 'temperature/clearGraphInfo' }),
+      },
       setInfo (index) {
         this.activeRoom = index
       },
