@@ -32,7 +32,6 @@
       Get additional info
     </div>
     <div class="right-bar__additional" :class="{ active: additionalActive }">
-      {{ graphInfo }}
       <BaseChart
         label="temperature"
         :chartData="tempChart"
