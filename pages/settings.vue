@@ -94,14 +94,14 @@
     data () {
       return {
         params: {
-          timeout: 5,
+          timeout: null,
           temperature: {
-            from: 21,
-            to: 22
+            from: null,
+            to: null
           },
           humidity: {
-            from: 40,
-            to: 50
+            from: null,
+            to: null
           }
         },
         valid: true,
@@ -165,6 +165,8 @@
           if (data[key]) {
             if (key === 'timeout') {
               this.params[key] = JSON.parse(JSON.stringify(data[key] / 1000))
+            } else {
+              this.params[key] = data[key]
             }
           }
         })

@@ -52,6 +52,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
 
       button {
         color: $c-white;
@@ -65,7 +67,7 @@
   .app {
     display: flex;
     flex-direction: column;
-    padding-top: 80px;
+    padding-top: 88px;
     background: $c-grey;
 
     @include respUp(lg) {

@@ -31,7 +31,9 @@ router.route('/settings').post(function (req, res) {
   try {
     const body = req.body
     store.collection('settings').doc('settings').set({
-      timeout: body.timeout
+      timeout: body.timeout,
+      temperature: body.temperature,
+      humidity: body.humidity
     })
     res.json({ status: 200, message: 'success' })
   } catch (e) {
