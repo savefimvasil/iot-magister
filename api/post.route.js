@@ -2,31 +2,26 @@ const express = require('express')
 const path = require('path')
 const config = require('./config')
 const firebase = require('firebase')
+const getAverage = require('./helpers/getAverage')
 
 firebase.initializeApp(config)
 
 const store = firebase.firestore()
 const db = firebase.database()
-//
-// store.collection('room-conditions').orderBy('date', 'desc').limit(1).onSnapshot(function (docs) {
-//   store.collection('settings').doc('settings').get().then(el => {
-//     // todo set timeout period in ESP
-//     console.log('timeout', el.data().timeout)
-//   })
-//   docs.forEach(doc => {
-//     console.log('doc', doc.data())
-//   })
-// })
-
-db.ref('room-conditions').orderByKey().limitToLast(1).on('value', function (snapshot) {
-  store.collection('settings').doc('settings').get().then(el => {
-    // todo set timeout period in ESP
-    console.log('timeout', el.data().timeout)
-  })
-  console.log('snapshot', snapshot.forEach(item => console.log(item.val())))
-})
-
 const router = express.Router()
+
+db.ref('room-conditions').orderByKey().limitToLast(1).on('value', async snapshot => {
+  snapshot.forEach(item => console.log('snapshot', item.val()))
+  try {
+    await store.collection('settings').doc('settings').get().then(el => {
+      // todo set timeout period in ESP
+      console.log('timeout', el.data().timeout)
+    })
+    await getAverage(store, snapshot)
+  } catch (e) {
+    console.log(e)
+  }
+})
 
 router.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './dist', 'index.html'))
