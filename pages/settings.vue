@@ -88,9 +88,11 @@
 <script>
   import axios from 'axios'
   import { mapActions } from 'vuex'
+  import validationMixin from '~/mixins/validation'
 
   export default {
     name: 'Settings',
+    mixins: [validationMixin],
     data () {
       return {
         params: {
@@ -106,29 +108,7 @@
         },
         valid: true,
         successMessage: '',
-        errorMessage: '',
-        timeoutRules: [
-          v => !!v || 'timeout is required',
-          v => (v && (+v >= 5 && +v <= 99)) || 'Timeout must be more than 5 and less then 99'
-        ],
-        fromTempRules: [
-          v => !!v || 'Temperature is required',
-          v => (v && (+v >= 0 && +v <= 99)) || 'Timeout must be more than 0 and less then 99'
-        ],
-        toTempRules: [
-          v => !!v || 'Temperature is required',
-          v => (v && (+v >= 0 && +v <= 99)) || 'Humidity must be more than 0 and less then 99',
-          v => (v && +v > +this.params.temperature.from) || '"To" temperature should be grater then "from"'
-        ],
-        fromHumidityRules: [
-          v => !!v || 'Humidity is required',
-          v => (v && (+v >= 0 && +v <= 99)) || 'Humidity must be more than 0 and less then 99'
-        ],
-        toHumidityRules: [
-          v => !!v || 'Humidity is required',
-          v => (v && (+v >= 0 && +v <= 99)) || 'Timeout must be more than 0 and less then 99',
-          v => (v && +v > +this.params.humidity.from) || '"To" humidity should be grater then "from"'
-        ]
+        errorMessage: ''
       }
     },
     watch: {
@@ -153,12 +133,6 @@
       validate () {
         this.$refs.form.validate()
       },
-      reset () {
-        this.$refs.form.reset()
-      },
-      resetValidation () {
-        this.$refs.form.resetValidation()
-      },
 
       setSettingsParam (data) {
         Object.keys({ ...this.params }).forEach(key => {
@@ -166,7 +140,7 @@
             if (key === 'timeout') {
               this.params[key] = JSON.parse(JSON.stringify(data[key] / 1000))
             } else {
-              this.params[key] = data[key]
+              this.params[key] = JSON.parse(JSON.stringify(data[key]))
             }
           }
         })
