@@ -51,7 +51,7 @@
             v-mask="'##'"
             class="text-field"
             type="number"
-            :rules="fromTempRules"
+            :rules="fromHumidityRules"
             required
             placeholder="от"
           />
@@ -61,7 +61,7 @@
             v-mask="'##'"
             class="text-field"
             type="number"
-            :rules="toTempRules"
+            :rules="toHumidityRules"
             required
             placeholder="До"
           />
