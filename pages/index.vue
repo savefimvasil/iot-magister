@@ -58,8 +58,9 @@
       }
     },
     async mounted () {
+      const timeout = this.getSettings.timeout > 99 * 1000 ? this.getSettings.timeout / 1000 : this.getSettings.timeout
       if (this.getSettings.hasOwnProperty('timeout') && this.getSettings.timeout) {
-        this.interval = setInterval(this.intervalMethod, this.getSettings.timeout)
+        this.interval = setInterval(this.intervalMethod, timeout)
       }
 
       this.firebase.database().ref('room-conditions').orderByKey().limitToLast(1).on('value', snapshot => {
@@ -73,9 +74,10 @@
     },
     beforeDestroy () {
       clearInterval(this.interval)
+      this.clearGraphInfo()
     },
     methods: {
-      ...mapActions({ setGraphInfo: 'temperature/setGraphInfo' }),
+      ...mapActions({ setGraphInfo: 'temperature/setGraphInfo', clearGraphInfo: 'temperature/clearGraphInfo' }),
       setInfo (index) {
         this.activeRoom = index
       },

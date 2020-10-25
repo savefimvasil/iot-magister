@@ -33,10 +33,25 @@ export const actions = {
     const date = moment(val.date).format('DD.MM HH:mm')
     commit('MUTATE_TEMP', { ...val, date })
     commit('MUTATE_HUMIDITY', { ...val, date })
+  },
+  clearGraphInfo ({ commit }, val) {
+    commit('CLEAR_GRAPH')
   }
 }
 
 export const mutations = {
+  CLEAR_GRAPH (state, payload) {
+    state.graphInfo = {
+      tempChart: {
+        values: [],
+        labels: []
+      },
+      humidityChart: {
+        values: [],
+        labels: []
+      }
+    }
+  },
   MUTATE_TEMP (state, payload) {
     if (state.graphInfo.tempChart.values.length < 10) {
       state.graphInfo.tempChart.values.push(payload.temperature)
