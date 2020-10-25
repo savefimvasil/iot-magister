@@ -18,10 +18,13 @@
     "@epegzz/sass-vars-loader": "^6.0.0",
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/style-resources": "^1.0.0",
+    "chart.js": "^2.9.4",
     "firebase": "^7.24.0",
     "lodash": "^4.17.20",
+    "moment": "^2.29.1",
     "nuxt": "^2.14.7",
     "v-mask": "^2.2.3",
+    "vue-chartjs": "^3.5.1",
     "vue-svg-loader": "^0.16.0",
     "vue-the-mask": "^0.11.1"
   },

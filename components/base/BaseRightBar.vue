@@ -28,6 +28,24 @@
         </div>
       </div>
     </div>
+    <div class="right-bar__additional-header" @click="additionalActive = !additionalActive">
+      Get additional info
+    </div>
+    <div class="right-bar__additional" :class="{ active: additionalActive }">
+      {{ graphInfo }}
+      <BaseChart
+        label="temperature"
+        :chartData="tempChart"
+        color="red"
+        class="right-bar__chart-temperature"
+      />
+      <BaseChart
+        label="humidity"
+        :chartData="humidityChart"
+        color="blue"
+        class="right-bar__chart-temperature"
+      />
+    </div>
     <div class="right-bar__cards-wrapper">
       <BaseItemCard
         v-for="(card, index) in cards"
@@ -41,6 +59,7 @@
 
 <script>
   import bedroom from '~/static/icons/bedroom.svg'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'BaseRightBar',
@@ -57,7 +76,17 @@
       return {
         cards: [
           { icon: 'light', enabled: false, name: 'light', status: '100%' }
-        ]
+        ],
+        additionalActive: false
+      }
+    },
+    computed: {
+      ...mapGetters({ graphInfo: 'temperature/getGraphInfo' }),
+      tempChart () {
+        return this.graphInfo.tempChart
+      },
+      humidityChart () {
+        return this.graphInfo.humidityChart
       }
     }
   }
@@ -120,6 +149,27 @@
     }
   }
 
+  &__additional {
+    border-bottom: 1px solid $c-grey-800;
+    overflow: hidden;
+    max-height: 0;
+    transition: 0.7s;
+    display: flex;
+
+    &-header {
+      padding: 30px 0;
+      cursor: pointer;
+      border-bottom: 1px solid $c-grey-800;
+      font-size: 20px;
+      color: $c-grey-1500;
+    }
+
+    &.active {
+      padding: 30px 0 50px;
+      max-height: 700px;
+    }
+  }
+
   &__info {
     display: flex;
     padding: 20px 0;
@@ -152,6 +202,12 @@
 
     @include respDown(sm) {
       padding-left: 0;
+    }
+  }
+
+  &__chart {
+    &-temperature {
+      height: 400px;
     }
   }
 

@@ -7,7 +7,7 @@
 
 <script>
   import axios from 'axios'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     data () {
@@ -46,15 +46,28 @@
         return menu
       }
     },
+    watch: {
+      getSettings: {
+        deep: true,
+        handler (val) {
+          clearInterval(this.interval)
+          if (val.hasOwnProperty('timeout') && val.timeout) {
+            this.interval = setInterval(this.intervalMethod, val.timeout / 1000)
+          }
+        }
+      }
+    },
     async mounted () {
       if (this.getSettings.hasOwnProperty('timeout') && this.getSettings.timeout) {
         this.interval = setInterval(this.intervalMethod, this.getSettings.timeout)
       }
 
-      const _self = this
-      this.firebase.database().ref('room-conditions').orderByKey().limitToLast(1).on('value', function (snapshot) {
+      this.firebase.database().ref('room-conditions').orderByKey().limitToLast(1).on('value', snapshot => {
         snapshot.forEach(item => {
-          _self.menu[0].temperature.value = item.val().temperature.toFixed(2)
+          this.menu[0].temperature.value = item.val().temperature.toFixed(1)
+          this.menu[0].humidity.value = item.val().humidity.toFixed(1)
+
+          this.setGraphInfo(item.val())
         })
       })
     },
@@ -62,16 +75,17 @@
       clearInterval(this.interval)
     },
     methods: {
+      ...mapActions({ setGraphInfo: 'temperature/setGraphInfo' }),
       setInfo (index) {
         this.activeRoom = index
       },
 
       intervalMethod () {
         this.firebase.database().ref('room-conditions').push({
-          humidity: this.humidity++,
+          humidity: 40 + Math.random() * 5,
           motion: false,
-          temperature: Math.random(),
-          date: this.firebase.firestore.FieldValue.serverTimestamp()
+          temperature: 20 + Math.random() * 5,
+          date: Date.now()
         })
         // this.firebase.firestore().collection('room-conditions').add({
         //   humidity: 51,

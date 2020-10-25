@@ -35,7 +35,7 @@
         successMessage: ''
       }
     },
-    async created () {
+    async mounted () {
       try {
         const data = await this.GET_SETTINGS()
         this.setSettingsParam(data)
@@ -55,6 +55,7 @@
           }
         })
       },
+
       async updateSettings () {
         const url = window.location.href.includes('localhost') ? 'http://localhost:3002/settings' : '/settings'
         try {

@@ -21,7 +21,7 @@
 <script>
   import { mapActions } from 'vuex'
   export default {
-    async created () {
+    async mounted () {
       try {
         await this.GET_SETTINGS()
       } catch (e) {
