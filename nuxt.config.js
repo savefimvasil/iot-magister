@@ -13,6 +13,10 @@ module.exports = {
   axios: {
     baseURL: 'http://httpbin.org'
   },
+  buildModules: [
+    // Simple usage
+    '@nuxtjs/vuetify'
+  ],
   build: {
     extend (config, { isDev, isClient }) {
       if (isDev && isClient) {

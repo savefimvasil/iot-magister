@@ -1,19 +1,80 @@
 <template>
   <section class="settings-page">
     <div class="container">
-      <div class="input">
-        <span>Как часто обноовлять данные?(секунд)</span><input
-          v-model="params.timeout"
-          v-mask="'##'"
-          min="1"
-          max="99"
-          type="number"
-          placeholder="интервал, секунд"
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <div class="input">
+          <span>Как часто обноовлять данные?(секунд)</span>
+          <v-text-field
+            v-model="params.timeout"
+            v-mask="'##'"
+            class="text-field"
+            label="Интервал"
+            type="number"
+            :rules="timeoutRules"
+            required
+            placeholder="интервал, секунд"
+          />
+        </div>
+
+        <div class="input">
+          <span>Диапазон температуры, от </span>
+          <v-text-field
+            v-model="params.temperature.from"
+            v-mask="'##'"
+            class="text-field"
+            type="number"
+            :rules="fromTempRules"
+            required
+            placeholder="от"
+          />
+          <span>, До </span>
+          <v-text-field
+            v-model="params.temperature.to"
+            v-mask="'##'"
+            class="text-field"
+            type="number"
+            :rules="toTempRules"
+            required
+            placeholder="До"
+          />
+          <span>&#8451;</span>
+        </div>
+
+        <div class="input">
+          <span>Диапазон влажности, от </span>
+          <v-text-field
+            v-model="params.humidity.from"
+            v-mask="'##'"
+            class="text-field"
+            type="number"
+            :rules="fromTempRules"
+            required
+            placeholder="от"
+          />
+          <span>, До </span>
+          <v-text-field
+            v-model="params.humidity.to"
+            v-mask="'##'"
+            class="text-field"
+            type="number"
+            :rules="toTempRules"
+            required
+            placeholder="До"
+          />
+          <span>%</span>
+        </div>
+
+        <v-btn
+          color="warning"
+          @click="updateSettings"
         >
-      </div>
-      <button class="submit-button" @click="updateSettings">
-        Сохранить
-      </button>
+          Сохранить
+        </v-btn>
+      </v-form>
       <p v-if="successMessage">
         {{ successMessage }}
       </p>
@@ -33,10 +94,49 @@
     data () {
       return {
         params: {
-          timeout: 5
+          timeout: 5,
+          temperature: {
+            from: 21,
+            to: 22
+          },
+          humidity: {
+            from: 40,
+            to: 50
+          }
         },
+        valid: true,
         successMessage: '',
-        errorMessage: ''
+        errorMessage: '',
+        timeoutRules: [
+          v => !!v || 'timeout is required',
+          v => (v && (+v >= 5 && +v <= 99)) || 'Timeout must be more than 5 and less then 99'
+        ],
+        fromTempRules: [
+          v => !!v || 'Temperature is required',
+          v => (v && (+v >= 0 && +v <= 99)) || 'Timeout must be more than 0 and less then 99'
+        ],
+        toTempRules: [
+          v => !!v || 'Temperature is required',
+          v => (v && (+v >= 0 && +v <= 99)) || 'Humidity must be more than 0 and less then 99',
+          v => (v && +v > +this.params.temperature.from) || '"To" temperature should be grater then "from"'
+        ],
+        fromHumidityRules: [
+          v => !!v || 'Humidity is required',
+          v => (v && (+v >= 0 && +v <= 99)) || 'Humidity must be more than 0 and less then 99'
+        ],
+        toHumidityRules: [
+          v => !!v || 'Humidity is required',
+          v => (v && (+v >= 0 && +v <= 99)) || 'Timeout must be more than 0 and less then 99',
+          v => (v && +v > +this.params.humidity.from) || '"To" humidity should be grater then "from"'
+        ]
+      }
+    },
+    watch: {
+      params: {
+        deep: true,
+        handler () {
+          this.validate()
+        }
       }
     },
     async mounted () {
@@ -50,6 +150,16 @@
     methods: {
       ...mapActions({ GET_SETTINGS: 'settings/GET_SETTINGS' }),
 
+      validate () {
+        this.$refs.form.validate()
+      },
+      reset () {
+        this.$refs.form.reset()
+      },
+      resetValidation () {
+        this.$refs.form.resetValidation()
+      },
+
       setSettingsParam (data) {
         Object.keys({ ...this.params }).forEach(key => {
           if (data[key]) {
@@ -61,11 +171,8 @@
       },
 
       async updateSettings () {
-        if (this.params.timeout < 5 || this.params.timeout > 99) {
-          this.errorMessage = 'Timeout должен быть больше 5 и меньше 99 секунд'
-          setTimeout(() => {
-            this.errorMessage = ''
-          }, 3000)
+        this.$refs.form.validate()
+        if (!this.valid) {
           return
         }
         const url = window.location.href.includes('localhost') ? 'http://localhost:3002/settings' : '/settings'
@@ -89,16 +196,28 @@
     padding: 40px 0;
     min-height: calc(100vh - 88px);
 
-    input {
-      margin-left: 20px;
-      padding: 6px;
-      min-width: 100px;
+    .input {
+      display: flex;
+      align-items: center;
+
+      .v-label {
+        left: -10px !important;
+      }
+
+      .v-messages__message {
+        color: red !important;
+      }
     }
 
-    .submit-button {
+    .text-field {
+      margin-left: 10px;
+      max-width: 300px;
+    }
+
+    button {
       margin-top: 20px;
       margin-bottom: 10px;
-      background-color: rgba(19,139,163,1);
+      background-color: rgba(19,139,163,1) !important;
       color: $c-white;
       padding: 12px 15px;
       border-radius: 4px;
