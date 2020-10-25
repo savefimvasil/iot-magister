@@ -17,7 +17,7 @@
       <p v-if="successMessage">
         {{ successMessage }}
       </p>
-      <p v-if="errorMessage">
+      <p v-if="errorMessage" style="color: red">
         {{ errorMessage }}
       </p>
     </div>
