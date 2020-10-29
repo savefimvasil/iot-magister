@@ -13,7 +13,5 @@ async function getAverage (store, snapshot) {
     })
   })
 }
-// doStuff is defined inside the module so we can call it wherever we want
 
-// Export it to make it available outside
 module.exports = getAverage
