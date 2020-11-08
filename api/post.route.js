@@ -3,6 +3,7 @@ const path = require('path')
 const config = require('./config')
 const firebase = require('firebase')
 const getAverage = require('./helpers/getAverage')
+const detectNormal = require('./helpers/detectNormal')
 
 firebase.initializeApp(config)
 
@@ -11,12 +12,32 @@ const db = firebase.database()
 const router = express.Router()
 
 db.ref('room-conditions').orderByKey().limitToLast(1).on('value', async snapshot => {
-  snapshot.forEach(item => console.log('snapshot', item.val()))
+  snapshot.forEach(item => {
+    const t = item.val().temperature
+    const h = item.val().humidity
+
+    if (!detectNormal('temperature', t)) {
+      // off
+      console.log('off temp')
+    } else {
+      // normal
+      console.log('normal temp')
+    }
+
+    if (!detectNormal('humidity', h)) {
+      console.log('off humidity')
+    } else {
+      // normal
+      console.log('normal humidity')
+    }
+  })
+
   try {
     await store.collection('settings').doc('settings').get().then(el => {
       // todo set timeout period in ESP
       console.log('timeout', el.data().timeout)
     })
+
     await getAverage(store, snapshot)
   } catch (e) {
     console.log(e)

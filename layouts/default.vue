@@ -3,11 +3,14 @@
     <header>
       <div class="container">
         <div>
-          <button v-if="$route.path === '/'" @click="$router.push('/settings')">
+          <button v-if="$route.path !== '/'" class="mr-2" @click="$router.push('/')">
+            Home
+          </button>
+          <button v-if="$route.path !== '/settings'" class="mr-2" @click="$router.push('/settings')">
             Settings
           </button>
-          <button v-else @click="$router.push('/')">
-            Home
+          <button v-if="$route.path !== '/learn'" class="mr-2" @click="$router.push('/learn')">
+            Learn
           </button>
         </div>
         <h1>Smart Home</h1>
@@ -74,5 +77,9 @@
       min-height: 100vh;
       max-height: 100vh;
     }
+  }
+
+  .mr-2 {
+    margin-right: 20px;
   }
 </style>

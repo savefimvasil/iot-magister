@@ -1,15 +1,17 @@
 'use strict'
 const getData = function () {
   // generate focal points
-  const min = 5
-  const max = 15
+  const min = 10
+  const max = 30
+  const hMin = 30
+  const hMax = 80
   const nPoints = 2
   const points = []
 
   for (let i = 0; i < nPoints; i++) {
     points[i] = []
     points[i][0] = Math.random() * (max - min) + min
-    points[i][1] = Math.random() * (max - min) + min
+    points[i][1] = Math.random() * (hMax - hMin) + hMin
   }
 
   // generate sample data
@@ -25,13 +27,6 @@ const getData = function () {
     }
   }
 
-  /**
-     * Gaussian distribution
-     * adapted from: https://github.com/robbrit/randgen
-     * @param  {number} mean  - Mean
-     * @param  {number} stdev - Standard Deviation
-     * @return {number}
-     */
   function gaussian (mean, stdev) {
     let u1, u2, v1, v2, s
     if (mean === undefined) {
@@ -103,7 +98,6 @@ const nextStep = function () {
   const series = []
   const clusterData = cluster.step()
 
-  // create an empty serie for each cluster
   for (let c = 0; c < clusterData.centroids.length; c++) {
     series[c] = [[], []]
   }

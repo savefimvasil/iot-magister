@@ -59,7 +59,6 @@
       }
     },
     async mounted () {
-      console.log(this.interval)
       const timeout = this.getSettings.timeout > 99 * 1000 ? this.getSettings.timeout / 1000 : this.getSettings.timeout
       if (this.getSettings.hasOwnProperty('timeout') && this.getSettings.timeout) {
         this.interval = setInterval(this.intervalMethod, timeout)
@@ -88,9 +87,9 @@
 
       intervalMethod () {
         this.firebase.database().ref('room-conditions').push({
-          humidity: 40 + Math.random() * 5,
+          humidity: 45 + Math.random() / 2,
           motion: false,
-          temperature: 20 + Math.random() * 5,
+          temperature: 22 + Math.random() / 2,
           date: Date.now()
         })
         // this.firebase.firestore().collection('room-conditions').add({
