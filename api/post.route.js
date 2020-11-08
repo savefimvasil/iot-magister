@@ -73,4 +73,14 @@ router.route('/get-settings').post(function (req, res) {
   }
 })
 
+router.route('/get-last').post(function (req, res) {
+  try {
+    db.ref('room-conditions').orderByKey().limitToLast(100).once('value', snapshot => {
+      res.json(snapshot.val())
+    })
+  } catch (e) {
+    res.json({ status: 500, message: 'unable to get timeout' })
+  }
+})
+
 module.exports = router
