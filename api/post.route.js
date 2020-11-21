@@ -17,15 +17,32 @@ db.ref('room-conditions').orderByKey().limitToLast(1).on('value', async snapshot
     const h = item.val().humidity
 
     if (!detectNormal('temperature', t)) {
-      // off
-      console.log('off temp')
+      const ref = db.ref('LED_STATUS')
+      ref.once('value').then(snapshot => {
+        if (snapshot.val() === 'ON') {
+          ref.set('OFF')
+        }
+      })
     } else {
       // normal
       console.log('normal temp')
     }
 
     if (!detectNormal('humidity', h)) {
-      console.log('off humidity')
+      const ref = db.ref('LED_STATUS')
+      ref.once('value').then(snapshot => {
+        if (snapshot.val() === 'ON') {
+          let state = 'OFF'
+          const interval = setInterval(() => {
+            ref.set(state)
+            state = state === 'OFF' ? 'ON' : 'OFF'
+          }, 300)
+          setTimeout(() => {
+            ref.set('OFF')
+            clearInterval(interval)
+          }, 3000)
+        }
+      })
     } else {
       // normal
       console.log('normal humidity')

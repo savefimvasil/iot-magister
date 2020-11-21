@@ -73,6 +73,11 @@
         return styleObj
       }
     },
+    watch: {
+      defaultValue (val) {
+        this.isActive = !!val
+      }
+    },
     created () {
       this.setConfigData()
     },
