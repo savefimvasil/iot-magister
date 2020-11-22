@@ -11,38 +11,45 @@ const store = firebase.firestore()
 const db = firebase.database()
 const router = express.Router()
 
+function setIntervalImmediately (func, interval) {
+  func()
+  return setInterval(func, interval)
+}
+
+function toggleLight () {
+  const ref = db.ref('LED_STATUS')
+  ref.once('value').then(snapshot => {
+    if (snapshot.val() === 'ON') {
+      let state = 'OFF'
+
+      const myInterval = setIntervalImmediately(_ => {
+        ref.set(state)
+        state = state === 'OFF' ? 'ON' : 'OFF'
+      }, 1000)
+
+      // clear interval after 4.5 seconds
+      setTimeout(_ => {
+        clearInterval(myInterval)
+        ref.set('OFF')
+      }, 4500)
+    }
+  })
+}
+
 db.ref('room-conditions').orderByKey().limitToLast(1).on('value', async snapshot => {
   snapshot.forEach(item => {
     const t = item.val().temperature
     const h = item.val().humidity
 
     if (!detectNormal('temperature', t)) {
-      const ref = db.ref('LED_STATUS')
-      ref.once('value').then(snapshot => {
-        if (snapshot.val() === 'ON') {
-          ref.set('OFF')
-        }
-      })
+      toggleLight()
     } else {
       // normal
       console.log('normal temp')
     }
 
     if (!detectNormal('humidity', h)) {
-      const ref = db.ref('LED_STATUS')
-      ref.once('value').then(snapshot => {
-        if (snapshot.val() === 'ON') {
-          let state = 'OFF'
-          const interval = setInterval(() => {
-            ref.set(state)
-            state = state === 'OFF' ? 'ON' : 'OFF'
-          }, 300)
-          setTimeout(() => {
-            ref.set('OFF')
-            clearInterval(interval)
-          }, 3000)
-        }
-      })
+      toggleLight()
     } else {
       // normal
       console.log('normal humidity')

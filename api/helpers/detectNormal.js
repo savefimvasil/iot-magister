@@ -3,7 +3,7 @@ const last = {
   humidity: []
 }
 
-const contrastPeriod = 30
+const contrastPeriod = 5
 const contrast = 4
 
 function detectNormal (param, val) {
@@ -24,6 +24,7 @@ function detectNormal (param, val) {
     // true if normal
     return true
   } else {
+    last[param] = []
     // false if contrast
     return false
   }

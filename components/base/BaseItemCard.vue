@@ -28,7 +28,8 @@
       return {
         check: null,
         isChecked: !!this.card.enabled,
-        isLoaded: false
+        isLoaded: false,
+        ref: null
       }
     },
     watch: {
@@ -37,24 +38,34 @@
       }
     },
     mounted () {
-      const ref = this.firebase.database().ref('LED_STATUS')
-      ref.once('value').then(snapshot => {
+      this.ref = this.firebase.database().ref('LED_STATUS')
+      this.ref.once('value').then(snapshot => {
         this.isChecked = snapshot.val() !== 'OFF'
       })
+
+      this.ref.on('value', this.firebaseCallback)
     },
+
+    beforeDestroy () {
+      // clearInterval(this.interval)
+      this.ref.off('value', this.firebaseCallback)
+    },
+
     methods: {
       changeActive (val) {
         const ref = this.firebase.database().ref('LED_STATUS')
         ref.once('value').then(snapshot => {
           this.check = val
-          console.log(val)
-          console.log()
           if (snapshot.val() === 'OFF') {
             ref.set('ON')
           } else {
             ref.set('OFF')
           }
         })
+      },
+
+      firebaseCallback (snapshot) {
+        this.isChecked = snapshot.val() !== 'OFF'
       }
     }
   }
