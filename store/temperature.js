@@ -10,6 +10,10 @@ export const state = () => ({
     humidityChart: {
       values: [],
       labels: []
+    },
+    presureChart: {
+      values: [],
+      labels: []
     }
   }
 })
@@ -31,8 +35,10 @@ export const actions = {
   },
   setGraphInfo ({ commit, state }, val) {
     const date = moment(val.date).format('DD.MM HH:mm')
+    console.log(val)
     commit('MUTATE_TEMP', { ...val, date })
     commit('MUTATE_HUMIDITY', { ...val, date })
+    commit('MUTATE_PRESURE', { ...val, date })
   },
   clearGraphInfo ({ commit }, val) {
     commit('CLEAR_GRAPH')
@@ -72,6 +78,17 @@ export const mutations = {
       state.graphInfo.humidityChart.values.push(payload.humidity)
       state.graphInfo.humidityChart.labels.splice(0, 1)
       state.graphInfo.humidityChart.labels.push(payload.date)
+    }
+  },
+  MUTATE_PRESURE (state, payload) {
+    if (state.graphInfo.presureChart.values.length < 10) {
+      state.graphInfo.presureChart.values.push(payload.pressure)
+      state.graphInfo.presureChart.labels.push(payload.date)
+    } else {
+      state.graphInfo.presureChart.values.splice(0, 1)
+      state.graphInfo.presureChart.values.push(payload.pressure)
+      state.graphInfo.presureChart.labels.splice(0, 1)
+      state.graphInfo.presureChart.labels.push(payload.date)
     }
   }
 }

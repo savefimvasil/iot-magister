@@ -44,6 +44,12 @@
         color="blue"
         class="right-bar__chart-temperature"
       />
+      <BaseChart
+        label="presure"
+        :chartData="presureChart"
+        color="green"
+        class="right-bar__chart-temperature"
+      />
     </div>
     <div class="right-bar__cards-wrapper">
       <BaseItemCard
@@ -83,6 +89,9 @@
       ...mapGetters({ graphInfo: 'temperature/getGraphInfo' }),
       tempChart () {
         return this.graphInfo.tempChart
+      },
+      presureChart () {
+        return this.graphInfo.presureChart
       },
       humidityChart () {
         return this.graphInfo.humidityChart
@@ -154,6 +163,7 @@
     max-height: 0;
     transition: 0.7s;
     display: flex;
+    flex-wrap: wrap;
 
     &-header {
       padding: 30px 0;
@@ -165,7 +175,7 @@
 
     &.active {
       padding: 30px 0 50px;
-      max-height: 700px;
+      max-height: 1300px;
     }
   }
 
@@ -207,6 +217,7 @@
   &__chart {
     &-temperature {
       height: 400px;
+      margin-bottom: 70px;
     }
   }
 

@@ -27,13 +27,13 @@ export default {
         labels: this.chartData.labels,
         datasets: [
           {
-            pointBackgroundColor: this.color === 'red' ? 'rgba(255,126,0,1)' : 'rgba(19,139,163,1)',
-            pointBorderColor: this.color === 'red' ? 'rgba(255,126,0,1)' : 'rgba(19,139,163,1)',
+            pointBackgroundColor: this.color === 'red' ? 'rgba(255,126,0,1)' : this.color === 'blue' ? 'rgba(19,139,163,1)' : 'rgba(35,163,57,1)',
+            pointBorderColor: this.color === 'red' ? 'rgba(255,126,0,1)' : this.color === 'blue' ? 'rgba(19,139,163,1)' : 'rgba(35,163,57,1)',
             borderWidth: 1,
             responsve: false,
-            borderColor: this.color === 'red' ? 'rgba(255,126,0,1)' : 'rgba(19,139,163,1)',
+            borderColor: this.color === 'red' ? 'rgba(255,126,0,1)' : this.color === 'blue' ? 'rgba(19,139,163,1)' : 'rgba(35,163,57,1)',
             fontSize: 18,
-            backgroundColor: this.color === 'red' ? 'rgba(255,126,0,0.4)' : 'rgba(19,139,163,0.4)',
+            backgroundColor: this.color === 'red' ? 'rgba(255,126,0,0.4)' : this.color === 'blue' ? 'rgba(19,139,163,0.4)' : 'rgba(35,163,57,0.4)',
             data: this.chartData.values
           }
         ]
