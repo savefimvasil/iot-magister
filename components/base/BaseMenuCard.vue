@@ -33,10 +33,11 @@
 
 <script>
   import bedroom from '~/static/icons/bedroom.svg'
+  import experiment from '~/static/icons/experiment.svg'
   export default {
     name: 'BaseMenuCar',
     components: {
-      bedroom
+      bedroom, experiment
     },
     props: {
       item: Object

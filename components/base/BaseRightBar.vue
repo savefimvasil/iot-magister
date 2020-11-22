@@ -64,12 +64,14 @@
 
 <script>
   import bedroom from '~/static/icons/bedroom.svg'
+  import experiment from '~/static/icons/experiment.svg'
   import { mapGetters } from 'vuex'
 
   export default {
     name: 'BaseRightBar',
     components: {
-      bedroom
+      bedroom,
+      experiment
     },
     props: {
       activeRoom: {

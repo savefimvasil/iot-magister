@@ -15,9 +15,9 @@
         activeRoom: 0,
         menu: [
           {
-            title: 'Main Bedroom',
-            image: 'bedroom.webp',
-            icon: 'bedroom',
+            title: 'SmartLab',
+            image: 'smartlab.png',
+            icon: 'experiment',
             temperature: {
               label: 'temperature',
               value: '29'
