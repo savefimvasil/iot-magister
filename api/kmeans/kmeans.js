@@ -2,6 +2,7 @@
 const kmeans = function (data, nClusters) {
   if (typeof data === 'undefined') throw new Error('Sample data is missing.')
   if (typeof nClusters === 'undefined') nClusters = 2
+  const self = {}
 
   let nfeatures = null
   let nSamples = null
@@ -35,7 +36,7 @@ const kmeans = function (data, nClusters) {
     }
   }
 
-  self.step = function () {
+  const step = function () {
     // reset inertia
     inertia = 0
 
@@ -82,6 +83,9 @@ const kmeans = function (data, nClusters) {
     }
   }
 
+  self.step = step
+
+  // eslint-disable-next-line no-unused-vars
   self.predict = function (maxIterations) {
     if (typeof maxIterations === 'undefined' || !Number.isInteger(maxIterations)) maxIterations = 1000
 

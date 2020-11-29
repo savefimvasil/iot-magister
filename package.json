@@ -23,6 +23,7 @@
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "nuxt": "^2.14.7",
+    "plotly.js": "^1.47.4",
     "v-mask": "^2.2.3",
     "vue-chartjs": "^3.5.1",
     "vue-svg-loader": "^0.16.0",
